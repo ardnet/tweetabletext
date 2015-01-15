@@ -10,14 +10,36 @@ CKEDITOR.dialog.add('tweetabletextDialog', function(editor) {
         elements: [
           {
             type: 'text',
+            id: 'displaytext',
+            label: 'Display Text',
+            validate: CKEDITOR.dialog.validate.notEmpty('Display Text field can not be empty.'),
+            setup: function(element) {
+              this.setValue(element.getText());
+
+            },
+            commit: function(element) {
+              element.setText(this.getValue());
+
+            }
+          },
+          {
+            type: 'text',
             id: 'tweetabletext',
             label: 'Tweetable Text',
             validate: CKEDITOR.dialog.validate.notEmpty('Tweetable Text field can not be empty.'),
             setup: function(element) {
-              this.setValue(element.getText());
+              var splitURL = element.getAttribute('href').split("?");
+              var dataTweet = splitURL[1].split("=");
+              this.setValue(dataTweet[1]);
+
             },
             commit: function(element) {
-              element.setText(this.getValue());
+              var twitterBaseUrl = 'http://twitter.com/intent/tweet?';
+              twitterBaseUrl += 'text=' + this.getValue();
+              element.setAttribute('href', twitterBaseUrl);
+
+              // For some reason, without doing this the changes won't be reflected on frontend.
+              element.setAttribute('data-cke-saved-href', twitterBaseUrl);
             }
           }
         ]
@@ -25,64 +47,43 @@ CKEDITOR.dialog.add('tweetabletextDialog', function(editor) {
     ],
 
     onShow: function() {
-      var dialog = this;
       var selection = editor.getSelection();
       var element = selection.getStartElement();
-      var selectedText;
 
-      /**
-       * get selected text and workaround for ie
-       */
-      if(CKEDITOR.env.ie) {
-        selection.unlock(true);
-        selectedText = selection.getNative().createRange().text;
-      } else {
-        selectedText = selection.getNative();
-      }
-
-      /**
-       * selected text will be in field
-       */
-      dialog.setValueOf('tab-basic', 'tweetabletext', selectedText);
-
-      if (element) {
-        element = element.getAscendant('tweettxt', true);
-      }
-      if (!element || element.getName() !== 'tweettxt') {
-        element = editor.document.createElement('tweettxt');
+      if (element.getAttribute('class') !== 'tweetabletext') {
+        element = editor.document.createElement('a');
         this.insertMode = true;
-      } else {
+      }
+      else {  
         this.insertMode = false;
       }
 
+      this.element = element;
       if (!this.insertMode) {
-        this.setupContent(element);
+        this.setupContent(this.element);
       }
     },
 
     onOk: function() {
       var dialog = this;
-      var textParam = dialog.getValueOf('tab-basic', 'tweetabletext');
-      var textToRemove = editor.getSelection().getRanges()[0];
-      var tweetabletext = editor.document.createElement('tweettxt');
-      var linkabletweet = editor.document.createElement('a');
-      var twitterBaseUrl = 'http://twitter.com/intent/tweet?';
+      var retrieveElement = this.element;
 
-      /**
-       * Building url for twitter
-       */
-      twitterBaseUrl += 'text=' + textParam;
-      
-      /**
-       * Replace selected text to tweetabletext.
-       */
-      textToRemove.deleteContents();
-      textToRemove.select()
-      linkabletweet.setAttribute('class', 'tweetabletext');
-      linkabletweet.setAttribute('href', twitterBaseUrl);
-      linkabletweet.setText(textParam);
-      linkabletweet.append('span');
-      editor.insertElement(linkabletweet);
+      var getDisplayText = dialog.getValueOf('tab-basic', 'displaytext');
+      var getTweetableText = dialog.getValueOf('tab-basic', 'tweetabletext');
+
+      var twitterBaseUrl = 'http://twitter.com/intent/tweet?';
+      var tweetabletext = editor.document.createElement('a');
+      tweetabletext.setAttribute('class', 'tweetabletext');
+
+      twitterBaseUrl += 'text=' + getTweetableText;
+      tweetabletext.setAttribute('href', twitterBaseUrl);
+      tweetabletext.setText(getDisplayText);
+
+      this.commitContent(retrieveElement);
+
+      if (this.insertMode) {
+        editor.insertElement(tweetabletext);
+      }
     }
   };
 });
