@@ -19,7 +19,7 @@ A simple CKEditor plugin to make some of text tweetable.
 ![Screenshot]
 (http://i.imgur.com/1ATzYJ3.png)
 
-CSS for the frontend:
+##### CSS for the frontend:
 
 ```css
 a.tweetabletext {
@@ -50,7 +50,7 @@ _feel free to make modification on the css._
 
 ##### @todo:
 * Proper Roadmap planning.
-* URL need to encode.
+* URL need to encode (_checked_).
 * Adding more parameter as mentioned here: https://dev.twitter.com/web/tweet-button/web-intent
 * Improving README file.
 
