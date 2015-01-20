@@ -50,7 +50,7 @@ _feel free to make modification on the css._
 
 ##### @todo:
 * Proper Roadmap planning.
-* URL need to encode (_checked_).
+* ~~URL need to encode~~ (_checked_).
 * Adding more parameter as mentioned here: https://dev.twitter.com/web/tweet-button/web-intent
 * Improving README file.
 
