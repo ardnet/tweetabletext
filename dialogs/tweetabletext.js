@@ -30,12 +30,14 @@ CKEDITOR.dialog.add('tweetabletextDialog', function(editor) {
             setup: function(element) {
               var splitURL = element.getAttribute('href').split("?");
               var dataTweet = splitURL[1].split("=");
-              this.setValue(dataTweet[1]);
+              var decodedDataTweet = decodeURI(dataTweet[1]);
+              this.setValue(decodedDataTweet);
 
             },
             commit: function(element) {
               var twitterBaseUrl = 'http://twitter.com/intent/tweet?';
-              twitterBaseUrl += 'text=' + this.getValue();
+              var encodedValue = encodeURI(this.getValue());
+              twitterBaseUrl += 'text=' + encodedValue;
               element.setAttribute('href', twitterBaseUrl);
 
               // For some reason, without doing this the changes won't be reflected on frontend.
@@ -70,6 +72,7 @@ CKEDITOR.dialog.add('tweetabletextDialog', function(editor) {
 
       var getDisplayText = dialog.getValueOf('tab-basic', 'displaytext');
       var getTweetableText = dialog.getValueOf('tab-basic', 'tweetabletext');
+      var getTweetableText = encodeURI(getTweetableText);
 
       var twitterBaseUrl = 'http://twitter.com/intent/tweet?';
       var tweetabletext = editor.document.createElement('a');
