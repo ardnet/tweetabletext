@@ -30,13 +30,13 @@ CKEDITOR.dialog.add('tweetabletextDialog', function(editor) {
             setup: function(element) {
               var splitURL = element.getAttribute('href').split("?");
               var dataTweet = splitURL[1].split("=");
-              var decodedDataTweet = decodeURI(dataTweet[1]);
+              var decodedDataTweet = decodeURIComponent(dataTweet[1]);
               this.setValue(decodedDataTweet);
 
             },
             commit: function(element) {
               var twitterBaseUrl = 'http://twitter.com/intent/tweet?';
-              var encodedValue = encodeURI(this.getValue());
+              var encodedValue = encodeURIComponent(this.getValue());
               twitterBaseUrl += 'text=' + encodedValue;
               element.setAttribute('href', twitterBaseUrl);
 
@@ -72,7 +72,7 @@ CKEDITOR.dialog.add('tweetabletextDialog', function(editor) {
 
       var getDisplayText = dialog.getValueOf('tab-basic', 'displaytext');
       var getTweetableText = dialog.getValueOf('tab-basic', 'tweetabletext');
-      var getTweetableText = encodeURI(getTweetableText);
+      var getTweetableText = encodeURIComponent(getTweetableText);
 
       var twitterBaseUrl = 'http://twitter.com/intent/tweet?';
       var tweetabletext = editor.document.createElement('a');
