@@ -35,7 +35,7 @@ CKEDITOR.dialog.add('tweetabletextDialog', function(editor) {
 
             },
             commit: function(element) {
-              var twitterBaseUrl = 'http://twitter.com/intent/tweet?';
+              var twitterBaseUrl = 'https://twitter.com/intent/tweet?';
               var encodedValue = encodeURI(this.getValue());
               twitterBaseUrl += 'text=' + encodedValue;
               element.setAttribute('href', twitterBaseUrl);
@@ -74,7 +74,7 @@ CKEDITOR.dialog.add('tweetabletextDialog', function(editor) {
       var getTweetableText = dialog.getValueOf('tab-basic', 'tweetabletext');
       var getTweetableText = encodeURI(getTweetableText);
 
-      var twitterBaseUrl = 'http://twitter.com/intent/tweet?';
+      var twitterBaseUrl = 'https://twitter.com/intent/tweet?';
       var tweetabletext = editor.document.createElement('a');
       tweetabletext.setAttribute('class', 'tweetabletext');
 
